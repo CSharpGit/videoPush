@@ -31,7 +31,7 @@ namespace 视频推流
 
         Helper helper = new Helper();
 
-        private void start_Click(object sender, RoutedEventArgs e)
+        private void Start_Click(object sender, RoutedEventArgs e)
         {
             if (helper.initMysql())
             {
@@ -55,7 +55,7 @@ namespace 视频推流
                         Console.WriteLine(cmdCommand[i]);
                     }
                     
-                    //helper.ExcuteCmdCommand(cmdCommand);
+                    helper.ExcuteCmdCommand(cmdCommand);
                 }
                 //string[] cmdCommand = new string[5];
                 //for (int i = 0; i < cmdCommand.Length; i++)

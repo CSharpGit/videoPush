@@ -13,6 +13,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        <Button Name="start" Content="启动" Grid.Row="0" Click="start_Click" FontSize="72"/>
+        <Button Name="start" Content="启动" Grid.Row="0" Click="Start_Click" FontSize="72"/>
     </Grid>
 </Window>
