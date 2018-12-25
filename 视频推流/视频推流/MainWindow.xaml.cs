@@ -54,8 +54,23 @@ namespace 视频推流
                         cmdCommand[i] = head+ StaticInfo.ipAdress[i]+":"+ StaticInfo.port[i]+center+ StaticInfo.http[i];
                         Console.WriteLine(cmdCommand[i]);
                     }
-                    
-                    helper.ExcuteCmdCommand(cmdCommand);
+                    //helper.ExcuteCmdCommand(cmdCommand);
+
+                    if (helper.CreateBatFile(cmdCommand))
+                    {
+                        Console.WriteLine("成功创建{0}个bat文件", cmdCommand.Length);
+                    }
+                    else
+                    {
+                        Console.WriteLine("创建bat文件失败！");
+                    }
+                    string[] batPath = new string[cmdCommand.Length];
+                    for (int i = 0; i < batPath.Length; i++)
+                    {
+                        int num = i + 1;
+                        batPath[i] = Directory.GetCurrentDirectory() + "\\allBat\\" + num + ".bat";//获取项目文件目录
+                    }
+                    helper.ExcuteBatFile(batPath);
                 }
                 //string[] cmdCommand = new string[5];
                 //for (int i = 0; i < cmdCommand.Length; i++)
@@ -71,31 +86,6 @@ namespace 视频推流
                 {
                     this.Close();
                 }
-            }
-            
-
-            //if (helper.CreateBatFile(cmdCommand))
-            //{
-            //    Console.WriteLine("成功创建{0}个bat文件", cmdCommand.Length);
-            //}
-            //else
-            //{
-            //    Console.WriteLine("创建bat文件失败！");
-            //}
-            //string[] batPath = new string[cmdCommand.Length];
-            //for (int i = 0; i < batPath.Length; i++)
-            //{
-            //    int num = i + 1;
-            //    batPath[i] = Directory.GetCurrentDirectory() + "\\allBat\\" + num + ".bat";//获取项目文件目录
-            //}
-            //helper.ExcuteBatFile(batPath);
-        }
-
-        private void Window_Closed(object sender, EventArgs e)
-        {
-            foreach (var pid in StaticInfo.processId)
-            {
-                helper.KillProcessAndChildren(Convert.ToInt32(pid));
             }
         }
     }

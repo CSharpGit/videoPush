@@ -4,8 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:视频推流"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="200" Width="300" WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen" Closed="Window_Closed">
+        mc:Ignorable="d" Height="120" Width="180" WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen" Title="视频推流" Cursor="Hand">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
@@ -13,6 +12,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        <Button Name="start" Content="启动" Grid.Row="0" Click="Start_Click" FontSize="72"/>
+        <Button Name="start" Content="启动" Grid.Row="0" Click="Start_Click" FontSize="48" Background="#FF0B39D8" Foreground="#FFF5EFEF"/>
     </Grid>
 </Window>

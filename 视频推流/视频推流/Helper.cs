@@ -110,7 +110,7 @@ namespace 视频推流
          * 传入参数：父进程id
          * 功能：根据父进程id，杀死与之相关的进程树
          */
-        public void KillProcessAndChildren(int pId)
+        public static void KillProcessAndChildren(int pId)
         {
             ManagementObjectSearcher searcher = new ManagementObjectSearcher("Select * From Win32_Process Where ParentProcessID=" + pId);
             ManagementObjectCollection moc = searcher.Get();

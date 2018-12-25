@@ -52,7 +52,14 @@ namespace 视频推流
         {
             get
             {
-                return new DelegateCommand { CommandAction = () => Application.Current.Shutdown() };
+                return new DelegateCommand { CommandAction = () => {
+                    foreach (var pid in StaticInfo.processId)
+                    {
+                        Helper.KillProcessAndChildren(Convert.ToInt32(pid));
+                    }
+                    Application.Current.Shutdown();
+                }
+                };
             }
         }
     }
