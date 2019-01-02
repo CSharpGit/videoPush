@@ -1,0 +1,60 @@
+﻿<Window x:Class="视频推流.CameraManage"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:视频推流"
+        mc:Ignorable="d"
+        Title="畅行金州监控管理平台" Height="768" Width="1024">
+    <Window.Resources>
+        <local:NameToLogoPathConverter x:Key="img"/>
+        <DataTemplate x:Key="CameraListItemViewTemplate">
+            <Grid Margin="10">
+                <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="200"></RowDefinition>
+                        <RowDefinition Height="33*"></RowDefinition>
+                        <RowDefinition Height="66*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="30"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="30"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Image Source="{Binding CameraName,Converter={StaticResource img}}" Grid.ColumnSpan="3" Grid.Row="0"></Image>
+                    <TextBlock Text="{Binding CameraName}" Grid.ColumnSpan="3" Grid.Row="1" TextAlignment="Center" FontSize="16" FontWeight="Black"/>
+                    <Button Content="启动" Height="25" Width="40" Grid.Column="0" Grid.Row="2"></Button>
+                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2">
+                        <Rectangle Fill="#FF0063FF" HorizontalAlignment="Left" Height="65" Margin="6,6,0,0" Stroke="Black" VerticalAlignment="Top" Width="202" RadiusY="13.394" RadiusX="13.394"/>
+                        <Ellipse x:Name="red" Fill="#FFFF0006" HorizontalAlignment="Left" Height="57" Margin="11,10,0,0" Stroke="Black" VerticalAlignment="Top" Width="56"/>
+                        <Ellipse x:Name="yellow" Fill="#FF8000" HorizontalAlignment="Left" Height="57" Margin="77,10,0,0" Stroke="Black" VerticalAlignment="Top" Width="56"/>
+                        <Ellipse x:Name="green" Fill="#088A08" HorizontalAlignment="Left" Height="57" Margin="145,10,0,0" Stroke="Black" VerticalAlignment="Top" Width="56"/>
+                    </Grid>
+                    <Button Content="终止" Height="25" Width="40" Grid.Column="4" Grid.Row="2"></Button>
+                </Grid>
+            </Grid>
+        </DataTemplate>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Horizontal" Name="header" Grid.Row="0">
+            <Button Name="startAll" Width="120" Margin="10" Content="全部启动"></Button>
+            <Button Name="endAll" Width="120" Margin="10" Content="全部关闭"></Button>
+        </StackPanel>
+        <Grid Name="controlPanel" ButtonBase.Click="ButtonClicked" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1">
+            <ListBox x:Name="ListBoxCars" ItemTemplate="{StaticResource CameraListItemViewTemplate}" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="5"/>
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+            </ListBox>
+        </Grid>
+    </Grid>
+</Window>

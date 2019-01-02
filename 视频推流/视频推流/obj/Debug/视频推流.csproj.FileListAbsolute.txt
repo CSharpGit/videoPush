@@ -40,3 +40,5 @@ E:\cmdPush\videoPush\视频推流\视频推流\bin\Debug\Hardcodet.Wpf.TaskbarNo
 E:\cmdPush\videoPush\视频推流\视频推流\bin\Debug\Hardcodet.Wpf.TaskbarNotification.xml
 E:\cmdPush\videoPush\视频推流\视频推流\obj\Debug\App.baml
 E:\cmdPush\videoPush\视频推流\视频推流\obj\Debug\GeneratedInternalTypeHelper.g.cs
+E:\cmdPush\videoPush\视频推流\视频推流\obj\Debug\CameraManage.g.cs
+E:\cmdPush\videoPush\视频推流\视频推流\obj\Debug\CameraManage.baml

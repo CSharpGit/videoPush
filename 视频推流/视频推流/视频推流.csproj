@@ -73,9 +73,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\Camera.cs" />
+    <Compile Include="CameraManage.xaml.cs">
+      <DependentUpon>CameraManage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="NotifyIconViewModel.cs" />
     <Compile Include="StaticInfo.cs" />
+    <Page Include="CameraManage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -117,6 +125,15 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Taskbar.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\img\摄像头1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\img\摄像头2.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\img\摄像头3.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
