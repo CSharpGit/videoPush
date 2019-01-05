@@ -8,12 +8,20 @@ namespace 视频推流
 {
     public static class StaticInfo
     {
-        public static ArrayList processId = new ArrayList();
+        public static ArrayList ipAdress = new ArrayList();//推流主机ip
 
-        public static ArrayList ipAdress = new ArrayList();
+        public static ArrayList port = new ArrayList();//推流主机端口
 
-        public static ArrayList port = new ArrayList();
+        public static ArrayList http = new ArrayList();//服务器rtmp流
 
-        public static ArrayList http = new ArrayList();
+        public static ArrayList cameraName = new ArrayList();//摄像头名称
+
+        public static ArrayList cameraImg = new ArrayList();//摄像头图片
+
+        public static ArrayList processId = new ArrayList();//进程ID
+
+        public static ArrayList status = new ArrayList();//摄像头状态
+
+        public static ArrayList statusColor = new ArrayList();//摄像头状态颜色
     }
 }

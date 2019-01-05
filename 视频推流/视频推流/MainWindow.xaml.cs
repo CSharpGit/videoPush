@@ -27,31 +27,42 @@ namespace 视频推流
         public MainWindow()
         {
             InitializeComponent();
+            Process[] processes = Process.GetProcessesByName("CMD");
+            if (processes.Length>0)
+            {
+                foreach (var pro in processes)
+                {
+                    Helper.KillProcessAndChildren(pro.Id);
+                }
+            }
         }
 
         Helper helper = new Helper();
 
         private void Start_Click(object sender, RoutedEventArgs e)
         {
-            if (helper.initMysql())
+            if (helper.InitMysql())
             {
-                string sql = "select ip,port,http from cxjz_ipcamera";
+                string sql = "select name,icon,ip,port,http from cxjz_ipcamera";
                 DataSet result=helper.Query(sql);
                 foreach (DataRow dr in result.Tables[0].Rows)
                 {
+                    StaticInfo.cameraName.Add(dr["name"].ToString());
+                    StaticInfo.cameraImg.Add("http://219.141.127.213:8081/" + dr["icon"].ToString());
                     StaticInfo.ipAdress.Add(dr["ip"].ToString());
                     StaticInfo.port.Add(dr["port"].ToString());
                     StaticInfo.http.Add(dr["http"].ToString());
                 }
 
-                if (StaticInfo.ipAdress.Count>0)
+                if (StaticInfo.cameraName.Count>0)
                 {
-                    string head = "ffmpeg -i rtsp://admin:@";
-                    string center = "/h264/ch1/main/av_stream -vcodec copy -acodec copy -f flv -bufsize 20 ";
-                    string[] cmdCommand = new string[StaticInfo.ipAdress.Count];
-                    for (int i = 0; i < StaticInfo.ipAdress.Count; i++)
+                    //string head = "ffmpeg -i rtsp://admin:@";
+                    //string center = "/h264/ch1/main/av_stream -vcodec copy -acodec copy -f flv -bufsize 20 ";
+                    string[] cmdCommand = new string[StaticInfo.cameraName.Count];
+                    for (int i = 0; i < StaticInfo.cameraName.Count; i++)
                     {
-                        cmdCommand[i] = head+ StaticInfo.ipAdress[i]+":"+ StaticInfo.port[i]+center+ StaticInfo.http[i];
+                        //cmdCommand[i] = head+ StaticInfo.ipAdress[i]+":"+ StaticInfo.port[i]+center+ StaticInfo.http[i];
+                        cmdCommand[i] = "ping www.baidu.com -t";
                         Console.WriteLine(cmdCommand[i]);
                     }
                     //helper.ExcuteCmdCommand(cmdCommand);
@@ -59,32 +70,28 @@ namespace 视频推流
                     if (helper.CreateBatFile(cmdCommand))
                     {
                         Console.WriteLine("成功创建{0}个bat文件", cmdCommand.Length);
+                        CameraManage cameraManage = new CameraManage();
+                        cameraManage.Show();
+                        this.Close();
                     }
                     else
                     {
                         Console.WriteLine("创建bat文件失败！");
                     }
-                    string[] batPath = new string[cmdCommand.Length];
-                    for (int i = 0; i < batPath.Length; i++)
-                    {
-                        int num = i + 1;
-                        batPath[i] = Directory.GetCurrentDirectory() + "\\allBat\\" + num + ".bat";//获取项目文件目录
-                    }
-                    helper.ExcuteBatFile(batPath);
+                    //string[] batPath = new string[cmdCommand.Length];
+                    //for (int i = 0; i < batPath.Length; i++)
+                    //{
+                    //    batPath[i] = Directory.GetCurrentDirectory() + "\\allBat\\" + StaticInfo.cameraName[i] + ".bat";//获取项目文件目录
+                    //}
+                    //helper.ExcuteBatFile(batPath);
                 }
-                //string[] cmdCommand = new string[5];
-                //for (int i = 0; i < cmdCommand.Length; i++)
-                //{
-                //    cmdCommand[i] = "ping www.baidu.com -t";
-                //}
-                //helper.ExcuteCmdCommand(cmdCommand);
             }
             else
             {
                 MessageBox.Show("服务器连接失败，即将关闭软件？!", "提示", MessageBoxButton.YesNo);
                 if (DialogResult.Value)
                 {
-                    this.Close();
+                    Application.Current.Shutdown();
                 }
             }
         }

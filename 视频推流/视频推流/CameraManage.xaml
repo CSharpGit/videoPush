@@ -7,30 +7,29 @@
         mc:Ignorable="d"
         Title="畅行金州监控管理平台" Height="768" Width="1024">
     <Window.Resources>
-        <local:NameToLogoPathConverter x:Key="img"/>
         <DataTemplate x:Key="CameraListItemViewTemplate">
             <Grid Margin="10">
                 <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="200"></RowDefinition>
-                        <RowDefinition Height="33*"></RowDefinition>
-                        <RowDefinition Height="66*"></RowDefinition>
+                        <RowDefinition Height="30*"></RowDefinition>
+                        <RowDefinition Height="20*"></RowDefinition>
+                        <RowDefinition Height="50*"></RowDefinition>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="30"></ColumnDefinition>
                         <ColumnDefinition Width="*"></ColumnDefinition>
                         <ColumnDefinition Width="30"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <Image Source="{Binding CameraName,Converter={StaticResource img}}" Grid.ColumnSpan="3" Grid.Row="0"></Image>
+                    <Image Source="{Binding CameraImg}" Grid.ColumnSpan="3" Grid.Row="0"></Image>
                     <TextBlock Text="{Binding CameraName}" Grid.ColumnSpan="3" Grid.Row="1" TextAlignment="Center" FontSize="16" FontWeight="Black"/>
-                    <Button Content="启动" Height="25" Width="40" Grid.Column="0" Grid.Row="2"></Button>
-                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2">
-                        <Rectangle Fill="#FF0063FF" HorizontalAlignment="Left" Height="65" Margin="6,6,0,0" Stroke="Black" VerticalAlignment="Top" Width="202" RadiusY="13.394" RadiusX="13.394"/>
-                        <Ellipse x:Name="red" Fill="#FFFF0006" HorizontalAlignment="Left" Height="57" Margin="11,10,0,0" Stroke="Black" VerticalAlignment="Top" Width="56"/>
-                        <Ellipse x:Name="yellow" Fill="#FF8000" HorizontalAlignment="Left" Height="57" Margin="77,10,0,0" Stroke="Black" VerticalAlignment="Top" Width="56"/>
-                        <Ellipse x:Name="green" Fill="#088A08" HorizontalAlignment="Left" Height="57" Margin="145,10,0,0" Stroke="Black" VerticalAlignment="Top" Width="56"/>
+                    <TextBlock Text="{Binding ProcessId}" Grid.ColumnSpan="3" Grid.Row="2" TextAlignment="Center" FontSize="16"/>
+                    <Button Content="启动" Height="25" Width="40" Grid.Column="0" Grid.Row="3"></Button>
+                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3">
+                        <Ellipse x:Name="yellow" Fill="{Binding StatusColor}" HorizontalAlignment="Center" Height="40" Margin="10" Stroke="Black" VerticalAlignment="Center" Width="40"/>
+                        <TextBlock Name="status" Text="{Binding Status}" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
                     </Grid>
-                    <Button Content="终止" Height="25" Width="40" Grid.Column="4" Grid.Row="2"></Button>
+                    <Button Content="终止" Height="25" Width="40" Grid.Column="4" Grid.Row="3"></Button>
                 </Grid>
             </Grid>
         </DataTemplate>
@@ -44,11 +43,11 @@
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <StackPanel Orientation="Horizontal" Name="header" Grid.Row="0">
-            <Button Name="startAll" Width="120" Margin="10" Content="全部启动"></Button>
-            <Button Name="endAll" Width="120" Margin="10" Content="全部关闭"></Button>
+            <Button Name="startAll" Width="120" Margin="10" Content="全部启动" Click="StartAll_Click"></Button>
+            <Button Name="endAll" Width="120" Margin="10" Content="全部关闭" Click="EndAll_Click"></Button>
         </StackPanel>
         <Grid Name="controlPanel" ButtonBase.Click="ButtonClicked" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1">
-            <ListBox x:Name="ListBoxCars" ItemTemplate="{StaticResource CameraListItemViewTemplate}" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+            <ListBox x:Name="ListBoxCameras" ItemTemplate="{StaticResource CameraListItemViewTemplate}" ScrollViewer.VerticalScrollBarVisibility="Hidden">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid Columns="5"/>

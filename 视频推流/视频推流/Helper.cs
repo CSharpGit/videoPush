@@ -30,8 +30,7 @@ namespace 视频推流
                 string[] batFileName = new string[command.Length];
                 for (int i = 0; i < command.Length; i++)
                 {
-                    int num = i + 1;
-                    batFileName[i] = folderName + "\\" + num + ".bat";//设置第i个bat文件的文件名
+                    batFileName[i] = folderName + "\\" + StaticInfo.cameraName[i] + ".bat";//设置第i个bat文件的文件名
                     FileStream fs = File.Create(batFileName[i]);//创建第i个bat文件
                     fs.Close();
                     StreamWriter sw = new StreamWriter(batFileName[i]);
@@ -64,7 +63,8 @@ namespace 视频推流
                 Task[] taskArray = new Task[batPath.Length];
                 for (int i = 0; i < taskArray.Length; i++)
                 {
-                    taskArray[i] = Task.Factory.StartNew(() => {
+                    taskArray[i] = Task.Factory.StartNew(() =>
+                    {
                         process.StartInfo.FileName = batPath[i];
                         process.StartInfo.RedirectStandardOutput = true;
                         process.StartInfo.RedirectStandardError = true;
@@ -96,6 +96,8 @@ namespace 视频推流
                         process.StartInfo.CreateNoWindow = true;//不打开程序窗口
                         process.Start();//启动
                         StaticInfo.processId.Add(process.Id);//记录启用的进程id
+                        StaticInfo.status.Add("推流中");
+                        StaticInfo.statusColor.Add("#04B404");
                         process.StandardInput.WriteLine(cmdCommand[i] + "&exit");//写入命令
                         process.StandardInput.AutoFlush = true;//自动执行
                         process.WaitForExit();
@@ -132,7 +134,7 @@ namespace 视频推流
             }
         }
 
-        public bool initMysql()
+        public bool InitMysql()
         {
             using(MySqlConnection connection = new MySqlConnection(connstr))
             {
@@ -178,6 +180,34 @@ namespace 视频推流
                     connection.Close();
                 }
                 return ds;
+            }
+        }
+
+        /// <summary>
+        /// 执行查询语句，返回DataSet
+        /// </summary>
+        /// <param name="SQLString">查询语句</param>
+        /// <returns>DataSet</returns>
+        public DataTable ExcuteDataTable(string SQLString)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connstr))
+            {
+                DataTable dt = new DataTable();
+                try
+                {
+                    connection.Open();
+                    MySqlDataAdapter command = new MySqlDataAdapter(SQLString, connection);
+                    command.Fill(dt);
+                }
+                catch (System.Data.SqlClient.SqlException ex)
+                {
+                    throw new Exception(ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+                return dt;
             }
         }
     }

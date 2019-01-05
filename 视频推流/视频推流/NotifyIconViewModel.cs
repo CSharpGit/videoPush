@@ -22,7 +22,7 @@ namespace 视频推流
                     CanExecuteFunc = () => Application.Current.MainWindow == null,
                     CommandAction = () =>
                     {
-                        Application.Current.MainWindow = new MainWindow();
+                        Application.Current.MainWindow = new CameraManage();
                         Application.Current.MainWindow.Show();
                     }
                 };
