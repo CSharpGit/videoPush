@@ -43,12 +43,11 @@ namespace 视频推流
         {
             if (helper.InitMysql())
             {
-                string sql = "select name,icon,ip,port,http from cxjz_ipcamera";
+                string sql = "select name,ip,port,http from cxjz_ipcamera";
                 DataSet result=helper.Query(sql);
                 foreach (DataRow dr in result.Tables[0].Rows)
                 {
                     StaticInfo.cameraName.Add(dr["name"].ToString());
-                    StaticInfo.cameraImg.Add("http://219.141.127.213:8081/" + dr["icon"].ToString());
                     StaticInfo.ipAdress.Add(dr["ip"].ToString());
                     StaticInfo.port.Add(dr["port"].ToString());
                     StaticInfo.http.Add(dr["http"].ToString());

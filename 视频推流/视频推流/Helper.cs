@@ -96,8 +96,6 @@ namespace 视频推流
                         process.StartInfo.CreateNoWindow = true;//不打开程序窗口
                         process.Start();//启动
                         StaticInfo.processId.Add(process.Id);//记录启用的进程id
-                        StaticInfo.status.Add("推流中");
-                        StaticInfo.statusColor.Add("#04B404");
                         process.StandardInput.WriteLine(cmdCommand[i] + "&exit");//写入命令
                         process.StandardInput.AutoFlush = true;//自动执行
                         process.WaitForExit();

@@ -35,7 +35,14 @@ namespace 视频推流
 
         private void ButtonClicked(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show((e.OriginalSource as FrameworkElement).Name);
+            MessageBox.Show(e.Source.ToString());
+            //for (int i = 0; i < CameraList.Count; i++)
+            //{
+            //    Camera cm = CameraList[i];
+            //    cm.Status = "已挂死";
+            //    cm.StatusColor = "#FFFF0006";
+            //}
+            //MessageBox.Show((e.OriginalSource as FrameworkElement).Name);
         }
 
         //初始化摄像头
@@ -44,11 +51,10 @@ namespace 视频推流
             for (int i = 0; i < StaticInfo.cameraName.Count; i++)
             {
                 CameraList.Add(new Camera {
-                    ProcessId= "0",
+                    ProcessId="0",
                     Status= "未启动",
-                    StatusColor = "#FFFF0006",
+                    StatusColor = "#F7D358",
                     CameraName =StaticInfo.cameraName[i].ToString(),
-                    CameraImg = new BitmapImage(new Uri(StaticInfo.cameraImg[i].ToString()))
                 });
             }
             this.ListBoxCameras.ItemsSource = CameraList;
@@ -62,6 +68,11 @@ namespace 视频推流
                 batPath[i] = Directory.GetCurrentDirectory() + "\\allBat\\" + StaticInfo.cameraName[i] + ".bat";//获取项目文件目录
             }
             helper.ExcuteBatFile(batPath);
+            for (int i = 0; i < CameraList.Count; i++)
+            {
+                Camera cm = CameraList[i];
+                cm.ProcessId = StaticInfo.processId[i].ToString();
+            }
             timer.Enabled = true; //是否触发Elapsed事件
             timer.Start();
         }
@@ -76,18 +87,17 @@ namespace 视频推流
             }
             for (int i = 0; i < StaticInfo.processId.Count; i++)
             {
-                if (Array.IndexOf(processId, Convert.ToInt32(StaticInfo.processId[i]))==-1)//记录的进程Id不存在当前进程中
+                if (Array.IndexOf(processId, Convert.ToInt32(CameraList[i].ProcessId))==-1)//记录的进程Id不存在当前进程中
                 {
-                    Console.WriteLine("进程{0}已退出", StaticInfo.processId[i].ToString());
+                    Camera cm = CameraList[i];
+                    cm.Status = "已挂死";
+                    cm.StatusColor = "#FFFF0006";
                 }
                 else
                 {
-                    this.controlPanel.Dispatcher.Invoke(new Action(
-                        delegate
-                        {
-                            TextBlock tb = this.controlPanel.FindName("status") as TextBlock;
-                            Console.WriteLine(tb.Text);
-                        }));
+                    Camera cm = CameraList[i];
+                    cm.Status = "推流中";
+                    cm.StatusColor = "#31B404";
                 }
             }
         }

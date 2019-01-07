@@ -16,12 +16,6 @@ namespace 视频推流
 
         public static ArrayList cameraName = new ArrayList();//摄像头名称
 
-        public static ArrayList cameraImg = new ArrayList();//摄像头图片
-
         public static ArrayList processId = new ArrayList();//进程ID
-
-        public static ArrayList status = new ArrayList();//摄像头状态
-
-        public static ArrayList statusColor = new ArrayList();//摄像头状态颜色
     }
 }
