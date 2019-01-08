@@ -32,6 +32,7 @@ namespace 视频推流
                 {
                     batFileName[i] = folderName + "\\" + StaticInfo.cameraName[i] + ".bat";//设置第i个bat文件的文件名
                     FileStream fs = File.Create(batFileName[i]);//创建第i个bat文件
+                    StaticInfo.batFileName.Add(batFileName[i]);//记录bat文件名
                     fs.Close();
                     StreamWriter sw = new StreamWriter(batFileName[i]);
                     sw.WriteLine(command[i]);

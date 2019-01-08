@@ -17,5 +17,7 @@ namespace 视频推流
         public static ArrayList cameraName = new ArrayList();//摄像头名称
 
         public static ArrayList processId = new ArrayList();//进程ID
+        
+        public static ArrayList batFileName = new ArrayList();//bat文件名
     }
 }

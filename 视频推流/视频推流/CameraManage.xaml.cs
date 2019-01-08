@@ -10,6 +10,7 @@ using System.Linq;
 using System.IO;
 using System.Timers;
 using System.Diagnostics;
+using System.Windows.Media;
 
 namespace 视频推流
 {
@@ -35,14 +36,70 @@ namespace 视频推流
 
         private void ButtonClicked(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(e.Source.ToString());
-            //for (int i = 0; i < CameraList.Count; i++)
-            //{
-            //    Camera cm = CameraList[i];
-            //    cm.Status = "已挂死";
-            //    cm.StatusColor = "#FFFF0006";
-            //}
-            //MessageBox.Show((e.OriginalSource as FrameworkElement).Name);
+            Button bt = e.OriginalSource as Button;
+            int[] prosessId = GetCurrentProcessIdes();
+            string operation = bt.Name;
+            if (operation=="start")
+            {
+                if (prosessId.Length>0)
+                {
+                    if (Array.IndexOf(prosessId, Convert.ToInt32(bt.CommandParameter)) == -1)//bt传来的进程Id不存在当前进程中
+                    {
+                        MessageBox.Show(bt.CommandParameter.ToString());
+                    }
+                    else//bt传来的进程Id存在当前进程中
+                    {
+                        MessageBox.Show("该摄像头正在推流中！");
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < CameraList.Count; i++)
+                    {
+                        if (bt.CommandParameter.ToString()== CameraList[i].ProcessId.ToString())
+                        {
+                            using (Process process = new Process())
+                            {
+                                FileInfo file = new FileInfo(StaticInfo.batFileName[i].ToString());
+                                if (file.Directory != null)
+                                {
+                                    process.StartInfo.WorkingDirectory = file.Directory.FullName;
+                                }
+                                process.StartInfo.FileName = StaticInfo.batFileName[i].ToString();
+                                process.StartInfo.RedirectStandardOutput = true;
+                                process.StartInfo.RedirectStandardError = true;
+                                process.StartInfo.UseShellExecute = false;
+                                process.StartInfo.CreateNoWindow = true;
+                                process.Start();
+                                CameraList[i].ProcessId = process.Id.ToString();//记录启用的进程id
+                                process.WaitForExit();
+                                process.Close();
+                            }
+                        }
+                    }
+                    timer.Enabled = true; //是否触发Elapsed事件
+                    timer.Start();
+                }
+                //MessageBox.Show(bt.CommandParameter.ToString());
+            }
+            else if (operation == "end")
+            {
+                if (Array.IndexOf(prosessId, Convert.ToInt32(bt.CommandParameter)) == -1)//记录的进程Id不存在当前进程中
+                {
+                    MessageBox.Show(bt.CommandParameter.ToString());
+                }
+                else//记录的进程Id不存在当前进程中
+                {
+                    Helper.KillProcessAndChildren(Convert.ToInt32(bt.CommandParameter));//结束bt传来的进程
+                    foreach (var cl in CameraList)
+                    {
+                        if (cl.ProcessId== bt.CommandParameter.ToString())
+                        {
+                            cl.ProcessId = "002";
+                        }
+                    }
+                }
+            }
         }
 
         //初始化摄像头
@@ -51,7 +108,7 @@ namespace 视频推流
             for (int i = 0; i < StaticInfo.cameraName.Count; i++)
             {
                 CameraList.Add(new Camera {
-                    ProcessId="0",
+                    ProcessId="001",
                     Status= "未启动",
                     StatusColor = "#F7D358",
                     CameraName =StaticInfo.cameraName[i].ToString(),
@@ -62,10 +119,10 @@ namespace 视频推流
 
         private void StartAll_Click(object sender, RoutedEventArgs e)
         {
-            string[] batPath = new string[StaticInfo.cameraName.Count];
+            string[] batPath = new string[StaticInfo.batFileName.Count];
             for (int i = 0; i < batPath.Length; i++)
             {
-                batPath[i] = Directory.GetCurrentDirectory() + "\\allBat\\" + StaticInfo.cameraName[i] + ".bat";//获取项目文件目录
+                batPath[i] = StaticInfo.batFileName[i].ToString();//获取项目文件目录
             }
             helper.ExcuteBatFile(batPath);
             for (int i = 0; i < CameraList.Count; i++)
@@ -77,20 +134,41 @@ namespace 视频推流
             timer.Start();
         }
 
+        private void EndAll_Click(object sender, RoutedEventArgs e)
+        {
+            //timer.Stop();
+            int[] prosessId = GetCurrentProcessIdes();
+            if (prosessId.Length > 0)
+            {
+                foreach (var cl in CameraList)
+                {
+                    if (Array.IndexOf(prosessId, Convert.ToInt32(cl.ProcessId)) == -1)//记录的进程Id不存在当前进程中
+                    {
+                        
+                    }
+                    else//记录的进程Id存在当前进程中
+                    {
+                        Helper.KillProcessAndChildren(Convert.ToInt32(cl.ProcessId));
+                        cl.ProcessId = "002";
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("当前没有任何摄像头在推流！");
+            }
+            StaticInfo.processId.Clear();
+        }
+
         public void CheckProcess(object sender, ElapsedEventArgs e)
         {
-            Process[] process = Process.GetProcessesByName("cmd");
-            int[] processId = new int[process.Length];
-            for (int i = 0; i < processId.Length; i++)
+            int[] prosessId = GetCurrentProcessIdes();
+            for (int i = 0; i < CameraList.Count; i++)
             {
-                processId[i] = process[i].Id;
-            }
-            for (int i = 0; i < StaticInfo.processId.Count; i++)
-            {
-                if (Array.IndexOf(processId, Convert.ToInt32(CameraList[i].ProcessId))==-1)//记录的进程Id不存在当前进程中
+                if (Array.IndexOf(prosessId, Convert.ToInt32(CameraList[i].ProcessId))==-1)//记录的进程Id不存在当前进程中
                 {
                     Camera cm = CameraList[i];
-                    cm.Status = "已挂死";
+                    cm.Status = "已关闭";
                     cm.StatusColor = "#FFFF0006";
                 }
                 else
@@ -102,9 +180,15 @@ namespace 视频推流
             }
         }
 
-        private void EndAll_Click(object sender, RoutedEventArgs e)
+        public int[] GetCurrentProcessIdes()//获取当前正在运行的CMD进程，将Id存在数组中
         {
-            timer.Stop();
+            Process[] process = Process.GetProcessesByName("cmd");
+            int[] processId = new int[process.Length];
+            for (int i = 0; i < processId.Length; i++)
+            {
+                processId[i] = process[i].Id;
+            }
+            return processId;
         }
     }
 }
