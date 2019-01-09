@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:视频推流"
         mc:Ignorable="d"
-        Title="畅行金州监控管理平台" Height="768" Width="1024">
+        Title="畅行金州监控管理平台" Height="768" Width="1024" Closed="Window_Closed" Icon="Taskbar.ico" ResizeMode="CanMinimize" SizeToContent="Width" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <DataTemplate x:Key="CameraListItemViewTemplate">
             <Border Name="border" BorderBrush="Aqua" BorderThickness="1" Padding="5" Margin="5">
@@ -47,7 +47,7 @@
             <ListBox x:Name="ListBoxCameras" ItemTemplate="{StaticResource CameraListItemViewTemplate}" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <UniformGrid Columns="8"/>
+                        <UniformGrid Columns="10"/>
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
             </ListBox>
