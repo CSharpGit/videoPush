@@ -1,0 +1,4 @@
+E:\cmdPush\videoPush\视频推流\视频推流\obj\Release\CameraManage.g.cs
+E:\cmdPush\videoPush\视频推流\视频推流\obj\Release\App.g.cs
+E:\cmdPush\videoPush\视频推流\视频推流\obj\Release\视频推流_MarkupCompile.cache
+E:\cmdPush\videoPush\视频推流\视频推流\obj\Release\视频推流_MarkupCompile.lref

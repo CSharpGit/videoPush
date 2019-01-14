@@ -24,7 +24,7 @@
                         <TextBlock x:Name="status" FontSize="10" Text="{Binding Status}" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
                     </Grid>
                     <TextBlock x:Name="cameraName" TextWrapping="NoWrap" Text="{Binding CameraName}" FontSize="10" Grid.ColumnSpan="2" Grid.Row="1" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
-                    <Button x:Name="start" CommandParameter="{Binding ProcessId}" Margin="1" Content="启动" Height="18" FontSize="10" Width="30" Grid.Row="2" Grid.Column="0"></Button>
+                    <Button x:Name="start" CommandParameter="{Binding ProcessId}" Margin="1" Content="{Binding Option}" Height="18" FontSize="10" Width="30" Grid.Row="2" Grid.Column="0"></Button>
                     <Button x:Name="end" CommandParameter="{Binding ProcessId}" Margin="1" Content="终止" Height="18" FontSize="10" Width="30" Grid.Row="2" Grid.Column="1"></Button>
                 </Grid>
             </Border>

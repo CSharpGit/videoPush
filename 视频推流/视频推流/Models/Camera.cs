@@ -10,9 +10,10 @@ namespace 视频推流
 {
     public class Camera: INotifyPropertyChanged
     {
-        public string _ProcessId;//进程id
+        private string _ProcessId;//进程id
         private string _Status;//进程状态
         private string _StatusColor;//状态提示颜色
+        private string _Option;//启动按钮显示文字
 
         public string ProcessId
         {
@@ -49,6 +50,19 @@ namespace 视频推流
                 {
                     _StatusColor = value;
                     PropertyChanged(this, new PropertyChangedEventArgs("StatusColor"));
+                }
+            }
+        }
+
+        public string Option
+        {
+            get { return _Option; }
+            set
+            {
+                if (_Option != value)
+                {
+                    _Option = value;
+                    PropertyChanged(this, new PropertyChangedEventArgs("Option"));
                 }
             }
         }

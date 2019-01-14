@@ -33,6 +33,8 @@ namespace 视频推流
 
         List<int> IsEnable = new List<int>();//摄像头启用状态
 
+        bool AutoRestart = false;//摄像头自动重启开关
+
         public CameraManage()
         {
             InitializeComponent();
@@ -59,40 +61,40 @@ namespace 视频推流
         {
             if (Helper.InitMysql())
             {
-                string sql = "select name,ip,port,http,enable from cxjz_ipcamera";
-                DataSet result = Helper.Query(sql);
-                foreach (DataRow dr in result.Tables[0].Rows)
-                {
-                    StaticInfo.cameraName.Add(dr["name"].ToString());
-                    StaticInfo.ipAdress.Add(dr["ip"].ToString());
-                    StaticInfo.port.Add(dr["port"].ToString());
-                    StaticInfo.http.Add(dr["http"].ToString());
-                    IsEnable.Add(Convert.ToInt32(dr["enable"]));
-                }
-                //StaticInfo.cameraName.Add("11");
-                //StaticInfo.ipAdress.Add("192.168.1.11");
-                //StaticInfo.port.Add("554");
-                //StaticInfo.http.Add("rtmp://219.141.127.213:1935/hls/asf");
+                //string sql = "select name,ip,port,http,enable from cxjz_ipcamera";
+                //DataSet result = Helper.Query(sql);
+                //foreach (DataRow dr in result.Tables[0].Rows)
+                //{
+                //    StaticInfo.cameraName.Add(dr["name"].ToString());
+                //    StaticInfo.ipAdress.Add(dr["ip"].ToString());
+                //    StaticInfo.port.Add(dr["port"].ToString());
+                //    StaticInfo.http.Add(dr["http"].ToString());
+                //    IsEnable.Add(Convert.ToInt32(dr["enable"]));
+                //}
+                StaticInfo.cameraName.Add("11");
+                StaticInfo.ipAdress.Add("192.168.1.11");
+                StaticInfo.port.Add("554");
+                StaticInfo.http.Add("rtmp://219.141.127.213:1935/hls/asf");
 
-                //StaticInfo.cameraName.Add("12");
-                //StaticInfo.ipAdress.Add("192.168.1.12");
-                //StaticInfo.port.Add("554");
-                //StaticInfo.http.Add("rtmp://219.141.127.213:1935/hls/cxjz");
+                StaticInfo.cameraName.Add("12");
+                StaticInfo.ipAdress.Add("192.168.1.12");
+                StaticInfo.port.Add("554");
+                StaticInfo.http.Add("rtmp://219.141.127.213:1935/hls/cxjz");
 
-                //StaticInfo.cameraName.Add("13");
-                //StaticInfo.ipAdress.Add("192.168.1.13");
-                //StaticInfo.port.Add("554");
-                //StaticInfo.http.Add("rtmp://219.141.127.213:1935/hls/fghh");
+                StaticInfo.cameraName.Add("13");
+                StaticInfo.ipAdress.Add("192.168.1.13");
+                StaticInfo.port.Add("554");
+                StaticInfo.http.Add("rtmp://219.141.127.213:1935/hls/fghh");
 
-                //StaticInfo.cameraName.Add("14");
-                //StaticInfo.ipAdress.Add("192.168.1.14");
-                //StaticInfo.port.Add("554");
-                //StaticInfo.http.Add("rtmp://219.141.127.213:1935/hls/jhk");
+                StaticInfo.cameraName.Add("14");
+                StaticInfo.ipAdress.Add("192.168.1.14");
+                StaticInfo.port.Add("554");
+                StaticInfo.http.Add("rtmp://219.141.127.213:1935/hls/jhk");
 
-                //StaticInfo.cameraName.Add("15");
-                //StaticInfo.ipAdress.Add("192.168.1.15");
-                //StaticInfo.port.Add("554");
-                //StaticInfo.http.Add("rtmp://219.141.127.213:1935/hls/dfc");
+                StaticInfo.cameraName.Add("15");
+                StaticInfo.ipAdress.Add("192.168.1.15");
+                StaticInfo.port.Add("554");
+                StaticInfo.http.Add("rtmp://219.141.127.213:1935/hls/dfc");
 
 
                 if (StaticInfo.cameraName.Count > 0)
@@ -133,6 +135,7 @@ namespace 视频推流
                     Status = "未启动",
                     StatusColor = "#F7D358",
                     CameraName = StaticInfo.cameraName[i].ToString(),
+                    Option="启动"
                     //CameraName="摄像头名称图一日体育体育挂号费"
                 });
             }
@@ -154,9 +157,6 @@ namespace 视频推流
             HideAllCmdWindonws();//启动完所有推流线程，先隐藏所有窗口
             CheckProcessTimer.Enabled = true; //是否触发Elapsed事件
             CheckProcessTimer.Start();//检查进程Id定时器启动
-
-            this.startAll.Foreground=Brushes.Red;
-            this.endAll.Foreground = Brushes.Black;
         }
 
         private void EndAll_Click(object sender, RoutedEventArgs e)//全部关闭按钮单击事件
@@ -177,30 +177,20 @@ namespace 视频推流
             {
                 MessageBox.Show("当前没有任何摄像头在推流！");
             }
-            this.endAll.Foreground = Brushes.Red;
-            this.startAll.Foreground = Brushes.Black;
         }
 
         private void AutoReStartOpen_Click(object sender, RoutedEventArgs e)
         {
-            CheckProcessTimer.Stop();
-            CheckProcessTimer.Enabled = false;
             MessageBox.Show("自动重启功能开启完成！");
-            CheckProcessTimer.Elapsed += new ElapsedEventHandler(CheckProcess_AutoRestart);//给定时器添加触发事件
-            CheckProcessTimer.Start();
-            CheckProcessTimer.Enabled = true;
+            AutoRestart = true;
             this.autoReStartOpen.Foreground = Brushes.Red;
             this.autoReStartClose.Foreground = Brushes.Black;
         }
 
         private void AutoReStartClose_Click(object sender, RoutedEventArgs e)
         {
-            CheckProcessTimer.Stop();
-            CheckProcessTimer.Enabled = false;
-            CheckProcessTimer.Elapsed -= new ElapsedEventHandler(CheckProcess_AutoRestart);
             MessageBox.Show("自动重启功能关闭完成！");
-            CheckProcessTimer.Start();
-            CheckProcessTimer.Enabled = true;
+            AutoRestart = false ;
             this.autoReStartClose.Foreground = Brushes.Red;
             this.autoReStartOpen.Foreground = Brushes.Black;
         }
@@ -208,15 +198,11 @@ namespace 视频推流
         private void ShowAllCmdWindows_Click(object sender, RoutedEventArgs e)
         {
             ShowAllCmdWindonws();
-            this.showAllCmdWindows.Foreground = Brushes.Red;
-            this.hideAllCmdWindows.Foreground = Brushes.Black;
         }
 
         private void HideAllCmdWindows_Click(object sender, RoutedEventArgs e)
         {
             HideAllCmdWindonws();
-            this.hideAllCmdWindows.Foreground = Brushes.Red;
-            this.showAllCmdWindows.Foreground = Brushes.Black;
         }
 
         private void ButtonClicked(object sender, RoutedEventArgs e)
@@ -268,6 +254,11 @@ namespace 视频推流
             }
         }
 
+        /**
+         * 传入参数：
+         * 功能：检查已保存的进程id，是否存在当前正在运行的进程id中，如果不存在，且当前运行状态为推流中，将其状态进行修改为已关闭，如果正在运行，则修改状态为推流中
+         * 返回值：
+         */
         public void CheckProcess(object sender, ElapsedEventArgs e)
         {
             int[] prosessId = GetCurrentProcessIdes();
@@ -281,35 +272,49 @@ namespace 视频推流
                         cm.Status = "已关闭";
                         cm.StatusColor = "#FFFF0006";
                         cm.ProcessId = "00"+i;
+                        cm.Option = "启动";
                     }
                 }
                 else
                 {
                     cm.Status = "推流中";
                     cm.StatusColor = "#31B404";
+                    if (IntPtrs[i] == IntPtr.Zero)
+                    {
+                        cm.Option = "隐藏";
+                    }
+                    else
+                    {
+                        cm.Option = "显示";
+                    }
                 }
             }
-        }
 
-        public void CheckProcess_AutoRestart(object sender, ElapsedEventArgs e)
-        {
-            string[] cmStatus = CameraList.Select(c=>c.Status).ToArray();
-            for (int i = 0; i < cmStatus.Length; i++)
+            if (AutoRestart)
             {
-                if (cmStatus[i]== "已关闭")
+                string[] cmStatus = CameraList.Select(c => c.Status).ToArray();
+                for (int i = 0; i < cmStatus.Length; i++)
                 {
-                    if (IsEnable[i]==1)
+                    if (cmStatus[i] == "已关闭")
                     {
-                        if (Array.IndexOf(GetCurrentProcessIdes(), Convert.ToInt32(CameraList[i].ProcessId)) == -1)//记录的进程Id不存在当前进程中
+                        if (IsEnable[i] == 1)
                         {
-                            ExcuteOneBatFile(i);
-                            Thread.Sleep(1000);
+                            if (AutoRestart)
+                            {
+                                ExcuteOneBatFile(i);
+                                Thread.Sleep(1000);
+                            }
                         }
                     }
                 }
             }
         }
 
+        /**
+         * 传入参数：
+         * 功能：检查数据库中摄像头可用状态，如果不可用，将对应的推流程序关闭
+         * 返回值：
+         */
         public void CheckCamera_EnableStatus(object sender,ElapsedEventArgs e)
         {
             string sql = "select enable from cxjz_ipcamera";
@@ -348,7 +353,12 @@ namespace 视频推流
             }
         }
 
-        public int[] GetCurrentProcessIdes()//获取当前正在运行的CMD进程，将Id存在数组中
+        /**
+         * 传入参数：
+         * 功能：获取当前正在运行的CMD进程，将Id存在数组中
+         * 返回值：
+         */
+        public int[] GetCurrentProcessIdes()
         {
             Process[] process = Process.GetProcessesByName("cmd");
             int[] processId = new int[process.Length];
@@ -359,6 +369,11 @@ namespace 视频推流
             return processId;
         }
 
+        /**
+         * 传入参数：需要执行的bat文件编号
+         * 功能：根据传入的bat文件编号，执行指定的bat文件
+         * 返回值：
+         */
         public void ExcuteOneBatFile(int index)
         {
             using (Process process = new Process())
@@ -379,12 +394,22 @@ namespace 视频推流
             }
         }
 
+        /**
+         * 传入参数：
+         * 功能：通过进程id，获取进程的窗口句柄
+         * 返回值：
+         */
         public IntPtr GetIntPtr(int pId)
         {
             IntPtr intPtr = Process.GetProcessById(pId).MainWindowHandle;
             return intPtr;
-        } 
+        }
 
+        /**
+         * 传入参数：
+         * 功能：关闭窗口时，结束所有正在推流的进程及其子进程
+         * 返回值：
+         */
         private void Window_Closed(object sender, EventArgs e)
         {
             foreach (var pid in GetCurrentProcessIdes())
@@ -394,6 +419,11 @@ namespace 视频推流
             Application.Current.Shutdown();
         }
 
+        /**
+         * 传入参数：
+         * 功能：隐藏所有推流程序窗口，将窗口句柄列表置空
+         * 返回值：
+         */
         public void HideAllCmdWindonws()
         {
             string[] currentPid = CameraList.Select(c => c.ProcessId).ToArray();
@@ -410,6 +440,11 @@ namespace 视频推流
             }
         }
 
+        /**
+         * 传入参数：
+         * 功能：显示所有推流程序窗口，将窗口句柄列表置空
+         * 返回值：
+         */
         public void ShowAllCmdWindonws()
         {
             for (int i = 0; i < IntPtrs.Count; i++)
@@ -422,6 +457,11 @@ namespace 视频推流
             }
         }
 
+        /**
+         * 传入参数：
+         * 功能：通过句柄显示和隐藏窗口
+         * 返回值：
+         */
         [DllImport("user32.dll", EntryPoint = "ShowWindow", SetLastError = true)]
         static extern bool ShowWindow(IntPtr hWnd, uint nCmdShow);
     }
